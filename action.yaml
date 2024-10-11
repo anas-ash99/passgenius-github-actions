@@ -3,10 +3,12 @@ description: "A reusable action to update the Kubernetes manifest with a new ima
 inputs:
   manifest_repo_url:
     description: "URL of the manifest repository."
-    required: true
+    default: "https://github.com/anas-ash99/deployment-manifest-passgenius.git" 
+    required: false
   manifest_repo_name:
     description: "Name of the manifest repository."
-    required: true
+    default: "deployment-manifest-passgenius" 
+    required: false
   manifest_branch_name:
     description: "Branch name of the manifest repository."
     required: false
@@ -14,7 +16,7 @@ inputs:
   image_tag:
     description: "The new image tag to update in the manifest."
     required: true
-  deployment_file_path:
+  deployment_name:
     description: "The path to the Kubernetes deployment file in the repository."
     required: true
   github_token:                # Add this input for the GitHub token
@@ -32,9 +34,9 @@ runs:
           git clone ${{ inputs.manifest_repo_url }}
           cd ${{ inputs.manifest_repo_name }}
           git checkout ${{ inputs.manifest_branch_name }}
-          sed -i "s|image: .*|image: ${{ inputs.image_tag }}|" "${{ inputs.deployment_file_path }}"
+          sed -i "s|image: .*|image: ${{ inputs.image_tag }}|" "overlays/dev/${{ inputs.deployment_file_path }}/deployment.yaml"
           git config user.name github-actions[bot]
           git config user.email github-actions[bot]@users.noreply.github.com
           git add .
           git commit -m "update image to version ${{ inputs.image_tag }}"
-          git push https://anas-ash99:${{ inputs.github_token }}@github.com/anas-ash99/${{ inputs.manifest_repo_name }}.git ${{ inputs.manifest_branch_name }}
+          git push https://x-access-token:${{ inputs.github_token }}@github.com/anas-ash99/${{ inputs.manifest_repo_name }}.git ${{ inputs.manifest_branch_name }}
