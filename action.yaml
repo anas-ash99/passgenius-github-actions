@@ -37,4 +37,4 @@ runs:
           git config user.email github-actions[bot]@users.noreply.github.com
           git add .
           git commit -m "update image to version ${{ inputs.image_tag }}"
-          git push https://x-access-token:${{ inputs.github_token }}@github.com/anas-ash99/${{ inputs.manifest_repo_name }}.git ${{ inputs.manifest_branch_name }}
+          git push https://anas-ash99:${{ inputs.github_token }}@github.com/anas-ash99/${{ inputs.manifest_repo_name }}.git ${{ inputs.manifest_branch_name }}
