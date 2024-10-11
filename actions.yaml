@@ -1,0 +1,37 @@
+name: "Update Kubernetes Manifest"
+description: "A reusable action to update the Kubernetes manifest with a new image tag and push the change to a Git repository."
+inputs:
+  manifest_repo_url:
+    description: "URL of the manifest repository."
+    required: true
+  manifest_repo_name:
+    description: "Name of the manifest repository."
+    required: true
+  manifest_branch_name:
+    description: "Branch name of the manifest repository."
+    required: false
+    default: "develop" 
+  image_tag:
+    description: "The new image tag to update in the manifest."
+    required: true
+  deployment_file_path:
+    description: "The path to the Kubernetes deployment file in the repository."
+    required: true
+outputs: {}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Update Kubernetes Manifest
+      shell: bash
+      run: |
+          echo 'Updating manifest ...'
+          git clone ${{ inputs.manifest_repo_url }}
+          cd ${{ inputs.manifest_repo_name }}
+          git checkout ${{ inputs.manifest_branch_name }}
+          sed -i "s|image: .*|image: ${{ inputs.image_tag }}|" "${{ inputs.deployment_file_path }}"
+          git config user.name github-actions[bot]
+          git config user.email github-actions[bot]@users.noreply.github.com
+          git add .
+          git commit -m "update image to version ${{ inputs.image_tag }}"
+          git push https://x-access-token:${{ secrets.TOKEN_GITHUB }}@github.com/${{ inputs.manifest_repo_name }}.git ${{ inputs.manifest_branch_name }}
