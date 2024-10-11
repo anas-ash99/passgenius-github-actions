@@ -17,6 +17,9 @@ inputs:
   deployment_file_path:
     description: "The path to the Kubernetes deployment file in the repository."
     required: true
+  github_token:                # Add this input for the GitHub token
+    description: "GitHub token for authentication."
+    required: true
 outputs: {}
 
 runs:
@@ -34,4 +37,4 @@ runs:
           git config user.email github-actions[bot]@users.noreply.github.com
           git add .
           git commit -m "update image to version ${{ inputs.image_tag }}"
-          git push https://x-access-token:${{ secrets.TOKEN_GITHUB }}@github.com/${{ inputs.manifest_repo_name }}.git ${{ inputs.manifest_branch_name }}
+          git push https://x-access-token:${{ inputs.github_token }}@github.com/${{ inputs.manifest_repo_name }}.git ${{ inputs.manifest_branch_name }}
